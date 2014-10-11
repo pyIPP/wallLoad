@@ -2,7 +2,7 @@
 #define package_point_hpp
 
 #include <boost/python.hpp>
-#include <boost/numpy.hpp>
+//#include <boost/numpy.hpp>
 #include <iostream>
 #include <math.h>
 
@@ -17,12 +17,12 @@ class point
             m_y(boost::python::extract<double>(list[1])),
             m_z(boost::python::extract<double>(list[2])) {
         }
-        point(const boost::numpy::ndarray & data) {
-            boost::numpy::ndarray temp = data.astype(boost::numpy::dtype::get_builtin<double>());
-            m_x = *((double *)temp.get_data());
-            m_y = *((double *)temp.get_data() + 1);
-            m_z = *((double *)temp.get_data() + 2);
-        }
+//        point(const boost::numpy::ndarray & data) {
+//            boost::numpy::ndarray temp = data.astype(boost::numpy::dtype::get_builtin<double>());
+//            m_x = *((double *)temp.get_data());
+//            m_y = *((double *)temp.get_data() + 1);
+//            m_z = *((double *)temp.get_data() + 2);
+//        }
 
         virtual ~point() {}
 
@@ -42,6 +42,13 @@ class point
         inline void set_x(const double x) { m_x = x; }
         inline void set_y(const double y) { m_y = y; }
         inline void set_z(const double z) { m_z = z; }
+
+        point rotate_toroidal(const double alpha) const {
+            double cosa = cos(alpha);
+            double sina = sin(alpha);
+            return point(m_x*cosa - m_y*sina, m_x*sina + m_y*cosa, m_z);
+        }
+
         
     protected:
         double m_x;

@@ -2,10 +2,11 @@
 #define package_directionGenerator_hpp
 
 #include <boost/python.hpp>
-#include <boost/numpy.hpp>
 #include <time.h>
 #include <cmath>
 #include <boost/random.hpp>
+#include <boost/math/constants/constants.hpp>
+#include <vektor.hpp>
 
 class directionGenerator {
     public:
@@ -34,8 +35,6 @@ class directionGenerator {
         boost::random::uniform_real_distribution<double> m_pi_distribution;
         boost::variate_generator< boost::mt19937&, boost::random::uniform_real_distribution <double> > m_2pi_generator;
         boost::variate_generator< boost::mt19937&, boost::random::uniform_real_distribution <double> > m_pi_generator;
-
-
 };    
 
 

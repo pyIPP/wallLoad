@@ -2,10 +2,10 @@
 #define package_vektor_hpp
 
 #include <boost/python.hpp>
-#include <boost/numpy.hpp>
+//#include <boost/numpy.hpp>
 #include <math.h>
 #include <iostream>
-#include "point.hpp"
+#include <point.hpp>
 
 class vektor
 {
@@ -14,12 +14,12 @@ class vektor
         vektor(const double x, const double y, const double z) : m_x(x), m_y(y), m_z(z) {}
         vektor(const vektor & rhs) : m_x(rhs.m_x), m_y(rhs.m_y), m_z(rhs.m_z) {}
         vektor(const point & rhs) : m_x(rhs.get_x()), m_y(rhs.get_y()), m_z(rhs.get_z()) {}
-        vektor(const boost::numpy::ndarray & data) {
-            boost::numpy::ndarray temp = data.astype(boost::numpy::dtype::get_builtin<double>());
-            m_x = *((double *)temp.get_data());
-            m_y = *((double *)temp.get_data() + 1);
-            m_z = *((double *)temp.get_data() + 2);
-        }
+//        vektor(const boost::numpy::ndarray & data) {
+//            boost::numpy::ndarray temp = data.astype(boost::numpy::dtype::get_builtin<double>());
+//            m_x = *((double *)temp.get_data());
+//            m_y = *((double *)temp.get_data() + 1);
+//            m_z = *((double *)temp.get_data() + 2);
+//        }
         vektor(const boost::python::list & list) {
             m_x = boost::python::extract<double>(list[0]);
             m_y = boost::python::extract<double>(list[1]);
@@ -47,6 +47,14 @@ class vektor
             }
             return *this;
         }
+
+        vektor & operator= (const point & rhs) {
+            m_x = rhs.get_x();
+            m_y = rhs.get_y();
+            m_z = rhs.get_z();
+            return *this;
+        }
+
 
         inline double get_x() const { return m_x; }
         inline double get_y() const { return m_y; }
@@ -109,14 +117,14 @@ class vektor
             return vektor(-m_x, -m_y, -m_z);
         }
 
-        boost::numpy::ndarray asarray() const {
-            boost::python::tuple tuple = boost::python::make_tuple(3);
-            boost::numpy::ndarray output = boost::numpy::empty(tuple, boost::numpy::dtype::get_builtin<double>());
-            *((double *)output.get_data()) = m_x;
-            *((double *)output.get_data() + 1) = m_y;
-            *((double *)output.get_data() + 2) = m_z;
-            return output;
-        }
+//        boost::numpy::ndarray asarray() const {
+//            boost::python::tuple tuple = boost::python::make_tuple(3);
+//            boost::numpy::ndarray output = boost::numpy::empty(tuple, boost::numpy::dtype::get_builtin<double>());
+//            *((double *)output.get_data()) = m_x;
+//            *((double *)output.get_data() + 1) = m_y;
+//            *((double *)output.get_data() + 2) = m_z;
+//            return output;
+//        }
 
         boost::python::list to_list() const {
             boost::python::list output;

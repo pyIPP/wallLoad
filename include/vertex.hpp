@@ -4,11 +4,11 @@
 #define EPSILON 0.000001
 
 #include <boost/python.hpp>
-#include <boost/numpy.hpp>
 #include <iostream>
 #include "point.hpp"
 #include "vektor.hpp"
 #include "hitResult.hpp"
+#include <cmath>
 
 class vertex
 {
@@ -60,24 +60,32 @@ class vertex
             P = direction.get_cross_product(e2);
             det = e1.get_dot_product(P);
             if( det > -EPSILON && det < EPSILON) {
-                return hitResult(false, -1.0, vektor());
+                return hitResult(origin, direction, false, vektor());
             }
             inv_det = 1.0/det;
             T = origin - m_p1;
             u = T.get_dot_product(P) * inv_det;
             if(u < 0.0 || u > 1.0) {
-                return hitResult(false, -1.0, vektor());
+                return hitResult(origin, direction, false, vektor());
             }
             Q = T.get_cross_product(e1);
             v = direction.get_dot_product(Q)*inv_det;
             if(v < 0.0 || u + v  > 1.0) {
-                return hitResult(false, -1.0, vektor());
+                return hitResult(origin, direction, false, vektor());
             }
             t = e2.get_dot_product(Q) * inv_det;
             if(t > EPSILON) {
-                return hitResult(true, t, origin + t*direction);
+                return hitResult(origin, direction, true, origin + t*direction);
             }
-            return hitResult(false, t, origin + t*direction);
+            return hitResult(origin, direction, false, origin + t*direction);
+        }
+
+        double get_area() const {
+           double a = (m_p1 - m_p2).get_length();
+           double b = (m_p2 - m_p3).get_length();
+           double c = (m_p3 - m_p1).get_length();
+           double s = a/2.0 + b/2.0 + c/2.0;
+           return std::sqrt(s*(s-a)*(s-b)*(s-c));
         }
 
     protected:
