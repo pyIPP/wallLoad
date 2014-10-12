@@ -18,6 +18,8 @@ namespace wallLoad {
         }
         vertex(const vertex & vert) : m_p1(vert.m_p1), m_p2(vert.m_p2), m_p3(vert.m_p3) {
         }
+        vertex(const std::vector<vektor> & rhs) : m_p1(rhs[0]), m_p2(rhs[1]), m_p3(rhs[2]) {
+        }
         vertex(const boost::python::list & p1, const boost::python::list & p2, const boost::python::list & p3) :
             m_p1(p1), m_p2(p2), m_p3(p3) {
         }
@@ -26,7 +28,8 @@ namespace wallLoad {
             m_p2(boost::python::extract<boost::python::list>(list[1])),
             m_p3(boost::python::extract<boost::python::list>(list[2])) {
         }
-        virtual ~vertex() {}
+        virtual ~vertex() {
+        }
 
         vertex & operator= (const vertex & rhs) {
             if(this != &rhs) {
@@ -62,7 +65,7 @@ namespace wallLoad {
             T = origin - m_p1;
             u = T.get_dot_product(P) * inv_det;
             if(u < 0.0 || u > 1.0) {
-                return hitResult((false, vektor());
+                return hitResult(false, vektor());
             }
             Q = T.get_cross_product(e1);
             v = direction.get_dot_product(Q)*inv_det;

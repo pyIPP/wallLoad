@@ -43,8 +43,8 @@ namespace wallLoad {
                     return output;
                 }
 
-                std::vector<double> get_random_toroidal_points(const uint32_t N = 1) {
-                    std::vector<double> output;
+                std::vector<vektor> get_random_toroidal_points(const uint32_t N = 1) {
+                    std::vector<vektor> output;
                     double R, z, u, P, rho;
                     double M = m_radiationProbability.get_max();
                     double R0 = m_equilibrium.get_R0();

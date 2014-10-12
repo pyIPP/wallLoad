@@ -6,8 +6,8 @@
 #include <iterator>
 #include <vector>
 #include <stdint.h>
-#include <include/wallLoad/core/vertex.hpp>
-#include <include/wallLoad/core/vektor.hpp>
+#include <wallLoad/core/vertex.hpp>
+#include <wallLoad/core/vektor.hpp>
 
 namespace wallLoad {
     namespace core {
@@ -22,7 +22,7 @@ namespace wallLoad {
                 }
                 virtual ~mesh() {}
 
-                mesh & operator=(const mesh & rhs) const {
+                mesh & operator=(const mesh & rhs) {
                     if(this != &rhs) {
                         std::vector<vertex>::operator=(rhs);
                     }
@@ -49,10 +49,10 @@ namespace wallLoad {
                 hitResult evaluateHit(const vektor & origin, const vektor & direction) const {
                     std::vector<hitResult> temp = intersect(origin, direction);
                     std::vector<double> distance;
-                    for(auto iter = begin(); iter != end(); ++iter) {
+                    for(auto iter = temp.begin(); iter != temp.end(); ++iter) {
                         distance.push_back(iter->get_distance(origin));
                     }
-                    std::vector<double>::const_iterator minimum = std::min_element(distance.begin(), distance.end());
+                    std::vector<double>::iterator minimum = std::min_element(distance.begin(), distance.end());
                     hitResult output = temp[std::distance(distance.begin(), minimum)];
                     if(std::count(distance.begin(), distance.end(), *minimum) != 1) {
                         output.set_hasHit(false);
@@ -71,7 +71,8 @@ namespace wallLoad {
                     return output;
                 }
 
-                boost::python::list evaluateHits(const boost::python::list & origins, const boost::python::list & directions) {
+                boost::python::list evaluateHits(const boost::python::list & origins, 
+                    const boost::python::list & directions) {
                     std::vector<vektor> tempOrigins;
                     std::vector<vektor> tempDirections;
                     uint32_t N = boost::python::len(origins);

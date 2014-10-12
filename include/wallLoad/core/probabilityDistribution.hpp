@@ -10,9 +10,10 @@
 
 namespace wallLoad {
     namespace core {
-        class probabilityDistribution
-        {
+        class probabilityDistribution {
             public:
+                probabilityDistribution() {}
+
                 probabilityDistribution(const boost::python::list & x, const boost::python::list & y) : 
                     m_generator(time(0)), N(boost::python::len(x)), 
                     m_x(new double[N]), m_y(new double[N]), m_accumulated(new double[N]) {
@@ -31,6 +32,7 @@ namespace wallLoad {
                     std::copy(rhs.m_accumulated, rhs.m_accumulated + N, m_accumulated);
                 }
 
+                
                 probabilityDistribution(const std::vector<double> & x, const std::vector<double> & y) :
                     m_generator(time(0)), N(x.size()), 
                     m_x(new double[N]), m_y(new double[N]), m_accumulated(new double[N]) {
@@ -39,8 +41,8 @@ namespace wallLoad {
                     calculate_accumulated();
                 }
 
-                probabilityDistribution(const uint32_t n, const double * x, const double * y) {
-                    m_generator(time(0)), N(m), 
+                probabilityDistribution(const uint32_t n, const double * x, const double * y) :
+                    m_generator(time(0)), N(n), 
                     m_x(new double[N]), m_y(new double[N]), m_accumulated(new double[N]) {
                     std::copy(x, x + N, m_x);
                     std::copy(y, y + N, m_y);
@@ -66,7 +68,7 @@ namespace wallLoad {
                 }
 
 
-                boost::python::list get_accumulated() const {
+                boost::python::list get_accumulated_python() const {
                     boost::python::list output;
                     for(double * iter = m_accumulated; iter != m_accumulated + N; ++iter) {
                         output.append(*iter);
@@ -101,12 +103,12 @@ namespace wallLoad {
                     return 0.0;
                 }
 
-                double get_max() { return *std::max_element(m_y, m_y+N); }
+                double get_max() const { return *std::max_element(m_y, m_y+N); }
 
-                double get_value(const double x) {
+                double get_value(const double x) const {
                     if((x < *m_x) || (x > *(m_x + N - 1))) return 0.0;
                     uint32_t i0 = 0;
-                    for(uint32_t i = 1; i < m_x.size(); ++i) {
+                    for(uint32_t i = 1; i < N; ++i) {
                         if((m_x[i-1] <= x) && (m_x[i] >= x)) i0 = i;
                     }
                     double t = x - m_x[i0-1];
@@ -130,9 +132,9 @@ namespace wallLoad {
                 boost::random::mt19937 m_generator;
                 boost::random::uniform_01<double> m_distribution;
                 uint32_t N;
-                double m_x;
-                double m_y;
-                double m_accumulated;
+                double * m_x;
+                double * m_y;
+                double * m_accumulated;
 
         };
     }

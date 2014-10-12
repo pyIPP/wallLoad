@@ -7,6 +7,7 @@
 #include <string.h>
 #include <fstream>
 #include <math.h>
+#include <algorithm>
 
 namespace wallLoad {
     namespace core {
@@ -109,7 +110,7 @@ namespace wallLoad {
                     return std::vector<double>(m_R, m_R + m_NR);
                 }
 
-                boost::python::list get_R() const {
+                boost::python::list get_R_python() const {
                     boost::python::list output;
                     for(double * iter = m_R; iter != m_R + m_NR; ++iter) {
                         output.append(*iter);
@@ -121,7 +122,7 @@ namespace wallLoad {
                     return std::vector<double>(m_z, m_z + m_Nz);
                 }
 
-                boost::python::list get_z() const {
+                boost::python::list get_z_python() const {
                     boost::python::list output;
                     for(double * iter = m_z; iter != m_z + m_Nz; ++iter) {
                         output.append(*iter);

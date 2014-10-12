@@ -4,6 +4,7 @@
 #include <boost/python.hpp>
 #include <math.h>
 #include <iostream>
+#include <vector>
 
 namespace wallLoad {
     namespace core {
@@ -23,6 +24,8 @@ namespace wallLoad {
                     m_y = boost::python::extract<double>(dict.get("y"));
                     m_z = boost::python::extract<double>(dict.get("z"));
                 }
+                vektor(const std::vector<double> & rhs) : m_x(rhs[0]), m_y(rhs[1]), m_z(rhs[2]) {
+                }
                 vektor(const vektor & left, const vektor & right) :
                     m_x(left.m_x - right.m_x), 
                     m_y(left.m_y - right.m_y),
@@ -37,13 +40,6 @@ namespace wallLoad {
                         m_y = rhs.m_y;
                         m_z = rhs.m_z;
                     }
-                    return *this;
-                }
-
-                vektor & operator= (const point & rhs) {
-                    m_x = rhs.get_x();
-                    m_y = rhs.get_y();
-                    m_z = rhs.get_z();
                     return *this;
                 }
 
@@ -172,9 +168,6 @@ namespace wallLoad {
             return !(lhs == rhs);
         }
 
-        inline vektor operator- (const point & lhs, const point & rhs) {
-            return vektor(lhs.get_x() - rhs.get_x(), lhs.get_y() - rhs.get_y(), lhs.get_z() - rhs.get_z());
-        }
     }
 }
 
