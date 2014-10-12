@@ -1,22 +1,18 @@
-#ifndef package_vertex_hpp
-#define package_vertex_hpp
+#ifndef include_wallLoad_core_vertex_hpp
+#define include_wallLoad_core_vertex_hpp
 
 #define EPSILON 0.000001
 
 #include <boost/python.hpp>
 #include <iostream>
-#include "point.hpp"
-#include "vektor.hpp"
+#include <wallLoad/core/vektor.hpp>
 #include "hitResult.hpp"
 #include <cmath>
-
-class vertex
-{
-    public:
-        vertex() {}
-        vertex(const point & p1, const point & p2, const point & p3) :
-            m_p1(p1), m_p2(p2), m_p3(p3) {
-        }
+namespace wallLoad {
+    namespace core {
+        class vertex
+        {
+        public:
         vertex(const vektor & p1, const vektor & p2, const vektor & p3) :
             m_p1(p1), m_p2(p2), m_p3(p3) {
         }
@@ -60,24 +56,24 @@ class vertex
             P = direction.get_cross_product(e2);
             det = e1.get_dot_product(P);
             if( det > -EPSILON && det < EPSILON) {
-                return hitResult(origin, direction, false, vektor());
+                return hitResult(false, vektor());
             }
             inv_det = 1.0/det;
             T = origin - m_p1;
             u = T.get_dot_product(P) * inv_det;
             if(u < 0.0 || u > 1.0) {
-                return hitResult(origin, direction, false, vektor());
+                return hitResult((false, vektor());
             }
             Q = T.get_cross_product(e1);
             v = direction.get_dot_product(Q)*inv_det;
             if(v < 0.0 || u + v  > 1.0) {
-                return hitResult(origin, direction, false, vektor());
+                return hitResult(false, vektor());
             }
             t = e2.get_dot_product(Q) * inv_det;
             if(t > EPSILON) {
-                return hitResult(origin, direction, true, origin + t*direction);
+                return hitResult(true, origin + t*direction);
             }
-            return hitResult(origin, direction, false, origin + t*direction);
+            return hitResult(false, origin + t*direction);
         }
 
         double get_area() const {
@@ -88,11 +84,12 @@ class vertex
            return std::sqrt(s*(s-a)*(s-b)*(s-c));
         }
 
-    protected:
+        protected:
         vektor m_p1;
         vektor m_p2;
         vektor m_p3;  
-};
-
+        };
+    }
+}
 
 #endif 
