@@ -71,7 +71,7 @@ namespace wallLoad {
                     return output;
                 }
 
-                boost::python::list evaluateHits(const boost::python::list & origins, 
+                boost::python::list evaluateHits_python(const boost::python::list & origins, 
                     const boost::python::list & directions) {
                     std::vector<vektor> tempOrigins;
                     std::vector<vektor> tempDirections;

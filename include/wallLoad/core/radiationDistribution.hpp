@@ -43,6 +43,15 @@ namespace wallLoad {
                     return output;
                 }
 
+                boost::python::list get_random_points_python(const uint32_t N = 1) {
+                    std::vector<vektor> temp = get_random_points(N);
+                    boost::python::list output;
+                    for(auto iter = temp.begin(); iter != temp.end(); ++iter) {
+                        output.append(*iter);
+                    }
+                    return output;
+                }
+
                 std::vector<vektor> get_random_toroidal_points(const uint32_t N = 1) {
                     std::vector<vektor> output;
                     double R, z, u, P, rho;
@@ -61,6 +70,15 @@ namespace wallLoad {
                             sina = sin(alpha);
                             output.push_back(vektor(R*cosa,R*sina,z));
                         }
+                    }
+                    return output;
+                }
+
+                boost::python::list get_random_toroidal_points_python(const uint32_t N = 1) {
+                    std::vector<vektor> temp = get_random_toroidal_points(N);
+                    boost::python::list output;
+                    for(auto iter = temp.begin(); iter != temp.end(); ++iter) {
+                        output.append(*iter);
                     }
                     return output;
                 }
@@ -89,8 +107,6 @@ namespace wallLoad {
                 double get_zmax() const {
                     return m_z.param().b();
                 }
-
-
 
             protected:
                 equilibrium m_equilibrium;

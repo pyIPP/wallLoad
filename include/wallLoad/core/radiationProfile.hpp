@@ -23,6 +23,12 @@ namespace wallLoad {
                     std::copy(powerDensity.begin(), powerDensity.end(), m_powerDensity);
                 }
 
+                radiationProfile(const radiationProfile & rhs) : 
+                    N(rhs.N), m_rho(new double[N]), m_powerDensity(new double[N]) {
+                    std::copy(rhs.m_rho, rhs.m_rho+N, m_rho);
+                    std::copy(rhs.m_powerDensity, rhs.m_powerDensity+N, m_powerDensity);
+                }
+
                 virtual ~radiationProfile() {
                     delete [] m_rho;
                     delete [] m_powerDensity;
@@ -70,18 +76,12 @@ namespace wallLoad {
                     for(uint32_t i = 0; i < N-1; ++i) {
                         integral += 0.5*(*(m_powerDensity + i) + *(m_powerDensity + i + 1))*(*(m_rho + i + 1) - *(m_rho + i));
                     }
-                    double * x = new double[N];
-                    double * y = new double[N];
-                    double * iter = y;
-                    double * power = m_powerDensity;
-                    std::copy(m_rho, m_rho + N, x);
-                    for(; iter != y + N; ++iter, ++power) {
-                        *iter = *power/integral;
+                    std::vector<double> rho = get_rho();
+                    std::vector<double> powerDensity = get_powerDensity();
+                    for(auto iter = powerDensity.begin(); iter != powerDensity.end(); ++iter) {
+                        *iter /= integral;
                     }
-                    probabilityDistribution output(N, x, y);
-                    delete [] x;
-                    delete [] y;
-                    return output;
+                    return probabilityDistribution(rho, powerDensity);
                 }
 
             protected:

@@ -12,8 +12,6 @@ namespace wallLoad {
     namespace core {
         class probabilityDistribution {
             public:
-                probabilityDistribution() {}
-
                 probabilityDistribution(const boost::python::list & x, const boost::python::list & y) : 
                     m_generator(time(0)), N(boost::python::len(x)), 
                     m_x(new double[N]), m_y(new double[N]), m_accumulated(new double[N]) {
