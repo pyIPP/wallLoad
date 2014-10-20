@@ -104,6 +104,10 @@ namespace wallLoad {
                     return vektor(-m_x, -m_y, -m_z);
                 }
 
+                inline double get_angle(const vektor & rhs) const {
+                    return acos(get_dot_product(rhs)/get_length()/rhs.get_length());
+                }
+
         //        boost::numpy::ndarray asarray() const {
         //            boost::python::tuple tuple = boost::python::make_tuple(3);
         //            boost::numpy::ndarray output = boost::numpy::empty(tuple, boost::numpy::dtype::get_builtin<double>());

@@ -2,6 +2,7 @@
 #define include_wallLoad_core_hpp
 
 #include <wallLoad/core/vektor.hpp>
+#include <wallLoad/core/polygon.hpp>
 #include <wallLoad/core/vertex.hpp>
 #include <wallLoad/core/hitResult.hpp>
 #include <wallLoad/core/mesh.hpp>

@@ -87,6 +87,10 @@ namespace wallLoad {
                return std::sqrt(s*(s-a)*(s-b)*(s-c));
             }
 
+            vektor get_normal() {
+                return ((m_p2 - m_p1).get_cross_product(m_p3 - m_p1)).get_normalized();
+            }
+
         protected:
             vektor m_p1;
             vektor m_p2;

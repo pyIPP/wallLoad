@@ -41,7 +41,19 @@ BOOST_PYTHON_MODULE(wallLoad) {
         .def(self == self)
         .def(self != self)
         .def("__neg__", &wallLoad::core::vektor::operator-)
+        .def("angle", &wallLoad::core::vektor::get_angle)
         ;
+
+    class_<wallLoad::core::polygon>("polygon", init<boost::python::list, boost::python::list>())
+        .def(init<wallLoad::core::polygon>())
+        .def("inside", &wallLoad::core::polygon::inside)
+        .add_property("R", &wallLoad::core::polygon::get_R_python)
+        .add_property("z", &wallLoad::core::polygon::get_z_python)
+        .add_property("size", &wallLoad::core::polygon::size)
+        .def("__len__", &wallLoad::core::polygon::size)
+        ;
+
+
 
     class_<wallLoad::core::hitResult>("hitResult", init<bool, wallLoad::core::vektor>())
         .def(init<wallLoad::core::hitResult>())
@@ -59,6 +71,7 @@ BOOST_PYTHON_MODULE(wallLoad) {
         .add_property("p2", &wallLoad::core::vertex::get_p2, &wallLoad::core::vertex::set_p2)
         .add_property("p3", &wallLoad::core::vertex::get_p3, &wallLoad::core::vertex::set_p3)
         .add_property("area", &wallLoad::core::vertex::get_area)
+        .add_property("normal", &wallLoad::core::vertex::get_normal)
         .def("intersect", &wallLoad::core::vertex::intersect)
         ;
 
@@ -98,19 +111,37 @@ BOOST_PYTHON_MODULE(wallLoad) {
         ;
 
     class_<wallLoad::core::radiationDistribution>("radiationDistribution", init<wallLoad::core::equilibrium, wallLoad::core::radiationProfile>())
+        .def(init<wallLoad::core::equilibrium, wallLoad::core::radiationProfile, wallLoad::core::polygon>())
         .add_property("Rmin", &wallLoad::core::radiationDistribution::get_Rmin, &wallLoad::core::radiationDistribution::set_Rmin)
-        .add_property("Rmax", &wallLoad::core::radiationDistribution::get_Rmin, &wallLoad::core::radiationDistribution::set_Rmax)
-        .add_property("zmin", &wallLoad::core::radiationDistribution::get_Rmin, &wallLoad::core::radiationDistribution::set_zmin)
-        .add_property("zmax", &wallLoad::core::radiationDistribution::get_Rmin, &wallLoad::core::radiationDistribution::set_zmax)
+        .add_property("Rmax", &wallLoad::core::radiationDistribution::get_Rmax, &wallLoad::core::radiationDistribution::set_Rmax)
+        .add_property("zmin", &wallLoad::core::radiationDistribution::get_zmin, &wallLoad::core::radiationDistribution::set_zmin)
+        .add_property("zmax", &wallLoad::core::radiationDistribution::get_zmax, &wallLoad::core::radiationDistribution::set_zmax)
         .def("random", &wallLoad::core::radiationDistribution::get_random_points_python)
         .def("randomToroidal", &wallLoad::core::radiationDistribution::get_random_toroidal_points_python)
         ;
 
     class_<wallLoad::core::mesh>("mesh", init<boost::python::list>())
         .def(init<wallLoad::core::mesh>())
+        .def(init<std::string>())
         .def("append", &wallLoad::core::mesh::append)
         .def("evaluateHit", &wallLoad::core::mesh::evaluateHit)
         .def("evaluateHits", &wallLoad::core::mesh::evaluateHits_python)
+        .def("__len__", &wallLoad::core::mesh::size)
+        .def("__getitem__", &wallLoad::core::mesh::operator[],
+            boost::python::return_internal_reference<>())
+        ;
+
+    class_<wallLoad::core::radiationLoad>("radiationLoad", init<wallLoad::core::mesh, wallLoad::core::radiationDistribution>())
+        .def(init<wallLoad::core::radiationLoad>())
+        .def("clear", &wallLoad::core::radiationLoad::clear)
+        .def("addSamples", &wallLoad::core::radiationLoad::add_samples)
+        .def("__getitem__", &wallLoad::core::radiationLoad::operator[])
+        .def("__len__", &wallLoad::core::radiationLoad::size)
+        .add_property("size", &wallLoad::core::radiationLoad::size)
+        .def("clear", &wallLoad::core::radiationLoad::clear)
+        .add_property("totalHits", &wallLoad::core::radiationLoad::get_total_hits)
+        .def("getHeatFlux", &wallLoad::core::radiationLoad::get_heat_flux_python)
+        .add_property("mesh", &wallLoad::core::radiationLoad::get_mesh)
         ;
 
 
