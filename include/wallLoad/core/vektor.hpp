@@ -100,6 +100,12 @@ namespace wallLoad {
                     return vektor(m_x/length, m_y/length, m_z/length);
                 }
 
+                inline vektor get_normal_vektor() const {
+                    vektor output(m_y, -m_x, 0);
+                    output /= output.get_length();
+                    return output;
+                }
+
                 inline vektor operator -() const {
                     return vektor(-m_x, -m_y, -m_z);
                 }
@@ -131,6 +137,28 @@ namespace wallLoad {
                     dict.setdefault("y", m_y);
                     dict.setdefault("z", m_z);
                     return dict;
+                }
+
+                inline vektor get_rotated_x(const double alpha) const {
+                    double cosa = cos(alpha);
+                    double sina = sin(alpha);
+                    return vektor(m_x, m_y*cosa - m_z*sina, m_y*sina + m_z*cosa);
+                }
+
+                inline vektor get_rotated_y(const double alpha) const {
+                    double cosa = cos(alpha);
+                    double sina = sin(alpha);
+                    return vektor(m_x*cosa + m_z*sina, m_y, m_z*cosa - m_x*sina);
+                }
+
+                inline vektor get_rotated_z(const double alpha) const {
+                    double cosa = cos(alpha);
+                    double sina = sin(alpha);
+                    return vektor(m_x*cosa - m_y*sina, m_x*sina + m_y*cosa, m_z);
+                }
+
+                inline double get_distance(const vektor & rhs) const {
+                    return sqrt(pow(m_x-rhs.m_x,2.0) + pow(m_y-rhs.m_y,2.0) + pow(m_z-rhs.m_z,2.0));
                 }
 
             protected:

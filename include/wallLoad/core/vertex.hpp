@@ -91,6 +91,10 @@ namespace wallLoad {
                 return ((m_p2 - m_p1).get_cross_product(m_p3 - m_p1)).get_normalized();
             }
 
+            vektor get_center() const {
+                return (m_p1 + m_p2 + m_p3)/3.0;
+            }
+
         protected:
             vektor m_p1;
             vektor m_p2;

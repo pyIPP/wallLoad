@@ -23,6 +23,7 @@ BOOST_PYTHON_MODULE(wallLoad) {
         .add_property("z", &wallLoad::core::vektor::get_z, &wallLoad::core::vektor::set_z)
         .add_property("length", &wallLoad::core::vektor::get_length)
         .add_property("normalized", &wallLoad::core::vektor::get_normalized)
+        .add_property("normal", &wallLoad::core::vektor::get_normal_vektor)
         .def("dot", &wallLoad::core::vektor::get_dot_product)
         .def("cross", &wallLoad::core::vektor::get_cross_product)
         .def("normalize", &wallLoad::core::vektor::normalize)
@@ -42,6 +43,10 @@ BOOST_PYTHON_MODULE(wallLoad) {
         .def(self != self)
         .def("__neg__", &wallLoad::core::vektor::operator-)
         .def("angle", &wallLoad::core::vektor::get_angle)
+        .def("getRotatedX", &wallLoad::core::vektor::get_rotated_x)
+        .def("getRotatedY", &wallLoad::core::vektor::get_rotated_y)
+        .def("getRotatedZ", &wallLoad::core::vektor::get_rotated_z)
+        .def("distance", &wallLoad::core::vektor::get_distance)
         ;
 
     class_<wallLoad::core::polygon>("polygon", init<boost::python::list, boost::python::list>())
@@ -72,6 +77,7 @@ BOOST_PYTHON_MODULE(wallLoad) {
         .add_property("p3", &wallLoad::core::vertex::get_p3, &wallLoad::core::vertex::set_p3)
         .add_property("area", &wallLoad::core::vertex::get_area)
         .add_property("normal", &wallLoad::core::vertex::get_normal)
+        .add_property("center", &wallLoad::core::vertex::get_center)
         .def("intersect", &wallLoad::core::vertex::intersect)
         ;
 
@@ -142,6 +148,10 @@ BOOST_PYTHON_MODULE(wallLoad) {
         .add_property("totalHits", &wallLoad::core::radiationLoad::get_total_hits)
         .def("getHeatFlux", &wallLoad::core::radiationLoad::get_heat_flux_python)
         .add_property("mesh", &wallLoad::core::radiationLoad::get_mesh)
+        ;
+
+    class_<wallLoad::core::diffuseScatter>("diffuseScatter")
+        .def("getDirection", &wallLoad::core::diffuseScatter::get_direction)
         ;
 
 

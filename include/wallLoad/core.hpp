@@ -12,5 +12,6 @@
 #include <wallLoad/core/equilibrium.hpp>
 #include <wallLoad/core/radiationDistribution.hpp>
 #include <wallLoad/core/radiationLoad.hpp>
+#include <wallLoad/core/diffuseScatter.hpp>
 
 #endif 
