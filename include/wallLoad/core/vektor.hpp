@@ -8,86 +8,113 @@
 
 namespace wallLoad {
     namespace core {
+        /*! \brief Class representing a vector in 3D.
+         *
+         * This class represents a vector \f$(x,y,z)\f$.
+         * The basic functions for vector calculus are implemented.
+         */
         class vektor
         {
             public:
-                vektor() : m_x(0), m_y(0), m_z(0) {}
-                vektor(const double x, const double y, const double z) : m_x(x), m_y(y), m_z(z) {}
-                vektor(const vektor & rhs) : m_x(rhs.m_x), m_y(rhs.m_y), m_z(rhs.m_z) {}
+                /*! \brief Default constructor
+                 *
+                 * This constructor initializes the vector with zero.
+                 */
+                vektor() : x(0.0), y(0.0), z(0.0) {}
+                /*! \brief Constructor
+                 *
+                 * This constructor initialized the vector with \f$(x,y,z)\f$.
+                 */
+                vektor(const double yIn, const double xIn, const double zIn) : x(xIn), y(yIn), z(zIn) {}
+                /*! \brief Copy constructor */
+                vektor(const vektor & rhs) : x(rhs.x), y(rhs.y), z(rhs.z) {}
+                /*! \brief Python constructor from list
+                 *
+                 * This constructor initializes the vector from a python list.
+                 * This constructor is only intended to interface with python.
+                 * Do not use this constructor from within C++.
+                 */
                 vektor(const boost::python::list & list) {
-                    m_x = boost::python::extract<double>(list[0]);
-                    m_y = boost::python::extract<double>(list[1]);
-                    m_z = boost::python::extract<double>(list[2]);
+                    x = boost::python::extract<double>(list[0]);
+                    y = boost::python::extract<double>(list[1]);
+                    z = boost::python::extract<double>(list[2]);
                 }
+                /*! \brief Python constructor from dictionary
+                 *
+                 * This constructor initializes the vector from a python dictionary.
+                 * This constructor is only intended to interface with python.
+                 * Do not use this constructor from within C++.
+                 */
                 vektor(const boost::python::dict & dict) {
-                    m_x = boost::python::extract<double>(dict.get("x"));
-                    m_y = boost::python::extract<double>(dict.get("y"));
-                    m_z = boost::python::extract<double>(dict.get("z"));
+                    x = boost::python::extract<double>(dict.get("x"));
+                    y = boost::python::extract<double>(dict.get("y"));
+                    z = boost::python::extract<double>(dict.get("z"));
                 }
-                vektor(const std::vector<double> & rhs) : m_x(rhs[0]), m_y(rhs[1]), m_z(rhs[2]) {
+                /*! \brief Constructor
+                 *
+                 * This constructor initializes the vector from a std::vector instance.
+                 */
+                vektor(const std::vector<double> & rhs) : x(rhs[0]), y(rhs[1]), z(rhs[2]) {
                 }
+                /*! \brief Difference constructor
+                 *
+                 * This constructor initializes the vector as the difference of the given vectors.
+                 * \f$\mathbf{v_0} - \mathbf{v_1}\f$.
+                 */
                 vektor(const vektor & left, const vektor & right) :
-                    m_x(left.m_x - right.m_x), 
-                    m_y(left.m_y - right.m_y),
-                    m_z(left.m_z - right.m_z) {
+                    x(left.x - right.x), 
+                    y(left.y - right.y),
+                    z(left.z - right.z) {
                 }
-
+                /*! Destructor */
                 virtual ~vektor() {}
 
                 vektor & operator= (const vektor & rhs) {
                     if(this != &rhs) {
-                        m_x = rhs.m_x;
-                        m_y = rhs.m_y;
-                        m_z = rhs.m_z;
+                        x = rhs.x;
+                        y = rhs.y;
+                        z = rhs.z;
                     }
                     return *this;
                 }
 
-                inline double get_x() const { return m_x; }
-                inline double get_y() const { return m_y; }
-                inline double get_z() const { return m_z; }
-
-                inline void set_x(const double x) { m_x = x; }
-                inline void set_y(const double y) { m_y = y; }
-                inline void set_z(const double z) { m_z = z; }
-
                 inline double get_length() const {
-                    return sqrt(m_x*m_x + m_y*m_y + m_z*m_z);
+                    return sqrt(x*x + y*y + z*z);
                 }
 
                 inline double get_dot_product(const vektor & rhs) const {
-                    return m_x*rhs.m_x + m_y*rhs.m_y + m_z*rhs.m_z;
+                    return x*rhs.x + y*rhs.y + z*rhs.z;
                 }
 
                 inline vektor get_cross_product(const vektor & rhs) const {
-                    return vektor(m_y*rhs.m_z-m_z*rhs.m_y, m_z*rhs.m_x-m_x*rhs.m_z, m_x*rhs.m_y-m_y*rhs.m_x);
+                    return vektor(y*rhs.z-z*rhs.y, z*rhs.x-x*rhs.z, x*rhs.y-y*rhs.x);
                 }
 
                 inline vektor & operator+=(const vektor & rhs) {
-                    m_x += rhs.m_x;
-                    m_y += rhs.m_y;
-                    m_z += rhs.m_z;
+                    x += rhs.x;
+                    y += rhs.y;
+                    z += rhs.z;
                     return *this;
                 }
 
                 inline vektor & operator-=(const vektor & rhs) {
-                    m_x -= rhs.m_x;
-                    m_y -= rhs.m_y;
-                    m_z -= rhs.m_z;
+                    x -= rhs.x;
+                    y -= rhs.y;
+                    z -= rhs.z;
                     return *this;
                 }
 
                 inline vektor & operator*= (const double rhs) {
-                    m_x *= rhs;
-                    m_y *= rhs;
-                    m_z *= rhs;
+                    x *= rhs;
+                    y *= rhs;
+                    z *= rhs;
                     return *this;
                 }
 
                 inline vektor & operator/= (const double rhs) {
-                    m_x /= rhs;
-                    m_y /= rhs;
-                    m_z /= rhs;
+                    x /= rhs;
+                    y /= rhs;
+                    z /= rhs;
                     return *this;
                 }
 
@@ -97,103 +124,99 @@ namespace wallLoad {
 
                 inline vektor get_normalized() const {
                     double length = get_length();
-                    return vektor(m_x/length, m_y/length, m_z/length);
+                    return vektor(x/length, y/length, z/length);
                 }
 
                 inline vektor get_normal_vektor() const {
-                    vektor output(m_y, -m_x, 0);
+                    vektor output(y, -x, 0);
                     output /= output.get_length();
                     return output;
                 }
 
                 inline vektor operator -() const {
-                    return vektor(-m_x, -m_y, -m_z);
+                    return vektor(-x, -y, -z);
                 }
 
                 inline double get_angle(const vektor & rhs) const {
                     return acos(get_dot_product(rhs)/get_length()/rhs.get_length());
                 }
 
-        //        boost::numpy::ndarray asarray() const {
-        //            boost::python::tuple tuple = boost::python::make_tuple(3);
-        //            boost::numpy::ndarray output = boost::numpy::empty(tuple, boost::numpy::dtype::get_builtin<double>());
-        //            *((double *)output.get_data()) = m_x;
-        //            *((double *)output.get_data() + 1) = m_y;
-        //            *((double *)output.get_data() + 2) = m_z;
-        //            return output;
-        //        }
-
                 boost::python::list to_list() const {
                     boost::python::list output;
-                    output.append(m_x);
-                    output.append(m_y);
-                    output.append(m_z);
+                    output.append(x);
+                    output.append(y);
+                    output.append(z);
                     return output;
                 }
 
                 boost::python::dict to_dict() const {
                     boost::python::dict dict;
-                    dict.setdefault("x", m_x);
-                    dict.setdefault("y", m_y);
-                    dict.setdefault("z", m_z);
+                    dict.setdefault("x", x);
+                    dict.setdefault("y", y);
+                    dict.setdefault("z", z);
                     return dict;
                 }
 
                 inline vektor get_rotated_x(const double alpha) const {
                     double cosa = cos(alpha);
                     double sina = sin(alpha);
-                    return vektor(m_x, m_y*cosa - m_z*sina, m_y*sina + m_z*cosa);
+                    return vektor(x, y*cosa - z*sina, y*sina + z*cosa);
                 }
 
                 inline vektor get_rotated_y(const double alpha) const {
                     double cosa = cos(alpha);
                     double sina = sin(alpha);
-                    return vektor(m_x*cosa + m_z*sina, m_y, m_z*cosa - m_x*sina);
+                    return vektor(x*cosa + z*sina, y, z*cosa - x*sina);
                 }
 
                 inline vektor get_rotated_z(const double alpha) const {
                     double cosa = cos(alpha);
                     double sina = sin(alpha);
-                    return vektor(m_x*cosa - m_y*sina, m_x*sina + m_y*cosa, m_z);
+                    return vektor(x*cosa - y*sina, x*sina + y*cosa, z);
                 }
 
+                /*! \brief Get the distance
+                 *
+                 * This function calculates the distance between the two vectors.
+                 * \f$ d = \sqrt{(x_1-x_0)^2 + (y_1-y_0)^2 + (z_1 - z_1)^2 }\f$
+                 */ 
                 inline double get_distance(const vektor & rhs) const {
-                    return sqrt(pow(m_x-rhs.m_x,2.0) + pow(m_y-rhs.m_y,2.0) + pow(m_z-rhs.m_z,2.0));
+                    return sqrt(pow(x-rhs.x,2.0) + pow(y-rhs.y,2.0) + pow(z-rhs.z,2.0));
                 }
 
-            protected:
-                double m_x;
-                double m_y;
-                double m_z;
+            public:
+                double x; /*< \brief x component of the vector */
+                double y; /*< \brief y component of the vector */
+                double z; /*< \brief z component of the vector */
         };
 
         std::ostream & operator<< (std::ostream & ostr, const vektor & vek) {
-            ostr << vek.get_x() << '\t' << vek.get_y() << '\t' << vek.get_z();
+            ostr << vek.x << '\t' << vek.y << '\t' << vek.z;
             return ostr;
         }
 
         inline vektor operator+ (const vektor & lhs, const vektor & rhs) {
-            return vektor(lhs) += rhs;
+            return vektor(lhs.x+rhs.x, lhs.y+rhs.y, lhs.z+rhs.z);
         }
 
         inline vektor operator- (const vektor & lhs, const vektor & rhs) {
-            return vektor(lhs) -= rhs;
+            return vektor(lhs.x-rhs.x, lhs.y-rhs.y, lhs.z-rhs.z);
         }
 
         inline vektor operator* (const vektor & lhs, const double value) {
-            return vektor(lhs) *= value;
+            return vektor(lhs.x*value, lhs.y*value, lhs.z*value);
         }
 
         inline vektor operator* (const double value, const vektor & rhs) {
-            return vektor(rhs) *= value;
+            return vektor(rhs.x*value, rhs.y*value, rhs.z*value);
         }
 
         inline vektor operator/ (const vektor & lhs, const double value) {
-            return vektor(lhs) /= value;
+            return vektor(lhs.x/value, lhs.y/value, lhs.z/value);
         }
 
         inline bool operator== (const vektor & lhs, const vektor & rhs) {
-            return lhs.get_x()==rhs.get_x() && lhs.get_y()==rhs.get_y() && lhs.get_z()==rhs.get_z();
+            return lhs.x==rhs.x && lhs.y==rhs.y && lhs.z==rhs.z;
         }
 
         inline bool operator!= (const vektor & lhs, const vektor & rhs) {
