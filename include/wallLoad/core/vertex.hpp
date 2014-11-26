@@ -13,40 +13,32 @@ namespace wallLoad {
         class vertex
         {
         public:
-            vertex(const vektor & p1, const vektor & p2, const vektor & p3) :
-                m_p1(p1), m_p2(p2), m_p3(p3) {
+            vertex(const vektor & P1, const vektor & P2, const vektor & P3) :
+                p1(P1), p2(P2), p3(P3) {
             }
-            vertex(const vertex & vert) : m_p1(vert.m_p1), m_p2(vert.m_p2), m_p3(vert.m_p3) {
+            vertex(const vertex & vert) : p1(vert.p1), p2(vert.p2), p3(vert.p3) {
             }
-            vertex(const std::vector<vektor> & rhs) : m_p1(rhs[0]), m_p2(rhs[1]), m_p3(rhs[2]) {
+            vertex(const std::vector<vektor> & rhs) : p1(rhs[0]), p2(rhs[1]), p3(rhs[2]) {
             }
-            vertex(const boost::python::list & p1, const boost::python::list & p2, const boost::python::list & p3) :
-                m_p1(p1), m_p2(p2), m_p3(p3) {
+            vertex(const boost::python::list & P1, const boost::python::list & P2, const boost::python::list & P3) :
+                p1(P1), p2(P2), p3(P3) {
             }
             vertex(const boost::python::list & list) :
-                m_p1(boost::python::extract<boost::python::list>(list[0])),
-                m_p2(boost::python::extract<boost::python::list>(list[1])),
-                m_p3(boost::python::extract<boost::python::list>(list[2])) {
+                p1(boost::python::extract<boost::python::list>(list[0])),
+                p2(boost::python::extract<boost::python::list>(list[1])),
+                p3(boost::python::extract<boost::python::list>(list[2])) {
             }
             virtual ~vertex() {
             }
 
             vertex & operator= (const vertex & rhs) {
                 if(this != &rhs) {
-                    m_p1 = rhs.m_p1;
-                    m_p2 = rhs.m_p2;
-                    m_p3 = rhs.m_p3;
+                    p1 = rhs.p1;
+                    p2 = rhs.p2;
+                    p3 = rhs.p3;
                 }
                 return *this;
             }
-
-            vektor get_p1() const { return m_p1; }
-            vektor get_p2() const { return m_p2; }
-            vektor get_p3() const { return m_p3; }
-
-            void set_p1(const vektor & p1) { m_p1 = p1; }
-            void set_p2(const vektor & p2) { m_p2 = p2; }
-            void set_p3(const vektor & p3) { m_p3 = p3; }
 
             hitResult intersect(const vektor & origin, const vektor & direction) const {
                 // Möller–Trumbore intersection algorithm
@@ -54,15 +46,15 @@ namespace wallLoad {
                 vektor P, Q, T;
                 double det, inv_det, u, v;
                 double t;
-                e1 = m_p2 - m_p1;
-                e2 = m_p3 - m_p1;
+                e1 = p2 - p1;
+                e2 = p3 - p1;
                 P = direction.get_cross_product(e2);
                 det = e1.get_dot_product(P);
                 if( det > -EPSILON && det < EPSILON) {
                     return hitResult(false, vektor());
                 }
                 inv_det = 1.0/det;
-                T = origin - m_p1;
+                T = origin - p1;
                 u = T.get_dot_product(P) * inv_det;
                 if(u < 0.0 || u > 1.0) {
                     return hitResult(false, vektor());
@@ -80,25 +72,25 @@ namespace wallLoad {
             }
 
             double get_area() const {
-               double a = (m_p1 - m_p2).get_length();
-               double b = (m_p2 - m_p3).get_length();
-               double c = (m_p3 - m_p1).get_length();
+               double a = (p1 - p2).get_length();
+               double b = (p2 - p3).get_length();
+               double c = (p3 - p1).get_length();
                double s = a/2.0 + b/2.0 + c/2.0;
                return std::sqrt(s*(s-a)*(s-b)*(s-c));
             }
 
             vektor get_normal() {
-                return ((m_p2 - m_p1).get_cross_product(m_p3 - m_p1)).get_normalized();
+                return ((p2 - p1).get_cross_product(p3 - p1)).get_normalized();
             }
 
             vektor get_center() const {
-                return (m_p1 + m_p2 + m_p3)/3.0;
+                return (p1 + p2 + p3)/3.0;
             }
 
-        protected:
-            vektor m_p1;
-            vektor m_p2;
-            vektor m_p3;  
+        public:
+            vektor p1;
+            vektor p2;
+            vektor p3;  
         };
     }
 }
