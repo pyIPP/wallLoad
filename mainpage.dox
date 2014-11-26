@@ -1,0 +1,5 @@
+/*! \mainpage WallLoad
+ *
+ * Wall load is a C++ tool kit to calculate the heat load onto the wall components of a fusion device.
+ * The code is written object oriented and has a python interface for simple usage.
+ */
