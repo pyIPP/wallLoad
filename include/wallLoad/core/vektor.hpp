@@ -66,9 +66,13 @@ namespace wallLoad {
                     y(left.y - right.y),
                     z(left.z - right.z) {
                 }
-                /*! Destructor */
+                /*! \brief Destructor */
                 virtual ~vektor() {}
 
+                /*! \brief Assignment operator
+                 *
+                 * This operator copies the given vector to the current instance.
+                 */
                 vektor & operator= (const vektor & rhs) {
                     if(this != &rhs) {
                         x = rhs.x;
@@ -78,18 +82,37 @@ namespace wallLoad {
                     return *this;
                 }
 
+                /*! \brief Calculate the length of the vector.
+                 *
+                 * This function returns the length of the vektor.
+                 * \f$ l = \sqrt{x^2 + y^2 + z^2}\f$
+                 */
                 inline double get_length() const {
                     return sqrt(x*x + y*y + z*z);
                 }
 
+                /*! \brief Calculate the dot product.
+                 *
+                 * This function calculates the dot product of the current vector with the given vector.
+                 * \f$ \mathbf{v}_0 \cdot \mathbf{v}_1 = x_0 x_1 + y_0 y_1 + z_0 z_1\f$
+                 */
                 inline double get_dot_product(const vektor & rhs) const {
                     return x*rhs.x + y*rhs.y + z*rhs.z;
                 }
 
+                /*! \brief Calculate the cross product.
+                 *
+                 * This function calculates the dot product of the current vector with the given vector.
+                 * \f$ \mathbf{v}_0 \times \mathbf{v}_1 = (y_0 z_1 - z_0 y_1, z_0 x_1 - x_0 z_1, x_0 y_1 - x_1 y_0)\f$
+                 */
                 inline vektor get_cross_product(const vektor & rhs) const {
                     return vektor(y*rhs.z-z*rhs.y, z*rhs.x-x*rhs.z, x*rhs.y-y*rhs.x);
                 }
 
+                /*! \brief Add vector to current instance.
+                 *
+                 * This operator adds the given vector to the given instance.
+                 */
                 inline vektor & operator+=(const vektor & rhs) {
                     x += rhs.x;
                     y += rhs.y;
@@ -97,6 +120,10 @@ namespace wallLoad {
                     return *this;
                 }
 
+                /*! \brief Subtract vector from current instance.
+                 *
+                 * This operator subtracts the given vector from the given instance.
+                 */
                 inline vektor & operator-=(const vektor & rhs) {
                     x -= rhs.x;
                     y -= rhs.y;
@@ -104,6 +131,10 @@ namespace wallLoad {
                     return *this;
                 }
 
+                /*! \brief Multiply the current vector with a scalar
+                 *
+                 * This operator multiplies the current vector with the given scalar.
+                 */
                 inline vektor & operator*= (const double rhs) {
                     x *= rhs;
                     y *= rhs;
@@ -111,6 +142,10 @@ namespace wallLoad {
                     return *this;
                 }
 
+                /*! \brief Divide the current vector by a scalar
+                 *
+                 * This operator divides the current vector by the given scalar.
+                 */
                 inline vektor & operator/= (const double rhs) {
                     x /= rhs;
                     y /= rhs;
@@ -118,29 +153,60 @@ namespace wallLoad {
                     return *this;
                 }
 
+                /*! \brief Normalize the vector
+                 *
+                 * This function normalizes the current vector.
+                 * After this function is applied the direction of the vector will be unaltered,
+                 * the length of the vector will be unity.
+                 */
                 inline void normalize() {
                     *this /= get_length();
                 }
 
+                /*! \brief Get the normalized the vector
+                 *
+                 * This function returns the normalized vector.
+                 */
                 inline vektor get_normalized() const {
                     double length = get_length();
                     return vektor(x/length, y/length, z/length);
                 }
 
+                /*! \brief Get the normal vector
+                 *
+                 * This function returns the normal to the current vector.
+                 * \todo{Need to check functionality}
+                 */
                 inline vektor get_normal_vektor() const {
                     vektor output(y, -x, 0);
                     output /= output.get_length();
                     return output;
                 }
 
+                /*! \brief Get negated vector
+                 *
+                 * This function returns the negation of the current vector
+                 * \f$(-x,-y,-z)\f$
+                 */
                 inline vektor operator -() const {
                     return vektor(-x, -y, -z);
                 }
 
+                /*! \brief Calculate the angle between two vectors
+                 *
+                 * This function returns the angle between the given vector and the current instance.
+                 * \f$ \alpha = \arccos\left(\frac{\mathbf{v}_0 \cdot \mathbf{v}_1}{|v_0| |v_1|} \right)\f$
+                 */
                 inline double get_angle(const vektor & rhs) const {
                     return acos(get_dot_product(rhs)/get_length()/rhs.get_length());
                 }
 
+                /*! \brief Return vector as python list.
+                 *
+                 * This function returns the current vector as a python list.
+                 * This function is intended as a python interface.
+                 * Do not use this function from within C++.
+                 */
                 boost::python::list to_list() const {
                     boost::python::list output;
                     output.append(x);
@@ -149,6 +215,12 @@ namespace wallLoad {
                     return output;
                 }
 
+                /*! \brief Return vector as python dictionary.
+                 *
+                 * This function returns the current vector as a python dictionary.
+                 * This function is intended as a python interface.
+                 * Do not use this function from within C++.
+                 */
                 boost::python::dict to_dict() const {
                     boost::python::dict dict;
                     dict.setdefault("x", x);
@@ -157,18 +229,33 @@ namespace wallLoad {
                     return dict;
                 }
 
+                /*! \brief Get vector rotated around the \f$x\f$-axis by the angle \f$\alpha\f$.
+                 *
+                 * This function returns the vector rotated around the \f$x\f$-axis by the angle \f$\alpha\f$.
+                 * \f$(x, y\cos(\alpha) - z\sin(\alpha), y\sin(\alpha) + z\cos(\alpha)\f$
+                 */
                 inline vektor get_rotated_x(const double alpha) const {
                     double cosa = cos(alpha);
                     double sina = sin(alpha);
                     return vektor(x, y*cosa - z*sina, y*sina + z*cosa);
                 }
 
+                /*! \brief Get vector rotated around the \f$y\f$-axis by the angle \f$\alpha\f$.
+                 *
+                 * This function returns the vector rotated around the \f$y\f$-axis by the angle \f$\alpha\f$.
+                 * \f$(x\cos(\alpha) + z\sin(\alpha), y, z\cos(\alpha) - x\sin(\alpha))\f$
+                 */
                 inline vektor get_rotated_y(const double alpha) const {
                     double cosa = cos(alpha);
                     double sina = sin(alpha);
                     return vektor(x*cosa + z*sina, y, z*cosa - x*sina);
                 }
 
+                /*! \brief Get vector rotated around the \f$z\f$-axis by the angle \f$\alpha\f$.
+                 *
+                 * This function returns the vector rotated around the \f$z\f$-axis by the angle \f$\alpha\f$.
+                 * \f$(x\cos(\alpha) - y\sin(\alpha), x\sin(\alpha) + y\cos(\alpha), z)\f$
+                 */
                 inline vektor get_rotated_z(const double alpha) const {
                     double cosa = cos(alpha);
                     double sina = sin(alpha);
@@ -185,9 +272,9 @@ namespace wallLoad {
                 }
 
             public:
-                double x; /*< \brief x component of the vector */
-                double y; /*< \brief y component of the vector */
-                double z; /*< \brief z component of the vector */
+                double x; /*!< \brief x component of the vector */
+                double y; /*!< \brief y component of the vector */
+                double z; /*!< \brief z component of the vector */
         };
 
         std::ostream & operator<< (std::ostream & ostr, const vektor & vek) {
