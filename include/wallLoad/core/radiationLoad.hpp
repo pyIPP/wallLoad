@@ -48,7 +48,7 @@ namespace wallLoad {
                     for(uint32_t i = 0; i < N; ) {
                         temp = m_mesh.evaluateHit(m_radiationDistribution.get_random_toroidal_point(), m_directionGenerator.generate());
                         if(temp) {
-                            ++std::vector<uint32_t>::operator[](temp.get_element());
+                            ++std::vector<uint32_t>::operator[](temp.element);
                             ++i;
                         }
                     }

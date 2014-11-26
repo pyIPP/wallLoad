@@ -175,7 +175,7 @@ namespace wallLoad {
                 /*! \brief Get the normal vector
                  *
                  * This function returns the normal to the current vector.
-                 * \todo{Need to check functionality}
+                 * \todo Need to check functionality.
                  */
                 inline vektor get_normal_vektor() const {
                     vektor output(y, -x, 0);

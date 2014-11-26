@@ -103,7 +103,7 @@ namespace wallLoad {
                     for(mesh::const_iterator iter = begin(); iter != end(); ++iter) {
                         temp = iter->intersect(origin, direction);
                         if(temp) {
-                            temp.set_element(std::distance(begin(), iter));
+                            temp.element = std::distance(begin(), iter);
                             output.push_back(temp);
                         }
                     }
@@ -123,7 +123,7 @@ namespace wallLoad {
                     uint32_t element = std::distance(distance.begin(), minimum);
                     hitResult output = temp[std::distance(distance.begin(), minimum)];
                     if(std::count(distance.begin(), distance.end(), *minimum) != 1) {
-                        output.set_hasHit(false);
+                        output.hasHit = false;
                     }
                     return output;
                 }
@@ -154,7 +154,7 @@ namespace wallLoad {
                     hitResult temp;
                     for( ; iterOrigins != tempOrigins.end(); ++iterOrigins, ++iterDirections) {
                         temp = evaluateHit(*iterOrigins, *iterDirections);
-                        if(temp.get_hasHit()) {
+                        if(temp.hasHit) {
                             output.append(temp);
                         }
                     }

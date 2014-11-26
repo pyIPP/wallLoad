@@ -62,9 +62,9 @@ BOOST_PYTHON_MODULE(wallLoad) {
 
     class_<wallLoad::core::hitResult>("hitResult", init<bool, wallLoad::core::vektor>())
         .def(init<wallLoad::core::hitResult>())
-        .add_property("hasHit", &wallLoad::core::hitResult::get_hasHit)
-        .add_property("hitPoint", &wallLoad::core::hitResult::get_hitPoint)
-        .add_property("element", &wallLoad::core::hitResult::get_element, &wallLoad::core::hitResult::set_element)
+        .add_property("hasHit", &wallLoad::core::hitResult::hasHit)
+        .add_property("hitPoint", &wallLoad::core::hitResult::hitPoint)
+        .add_property("element", &wallLoad::core::hitResult::element, &wallLoad::core::hitResult::element)
         .def("distance", &wallLoad::core::hitResult::get_distance)
         ;      
 

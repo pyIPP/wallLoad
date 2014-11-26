@@ -6,42 +6,62 @@
 
 namespace wallLoad {
     namespace core {
+        /*! \brief Class to store the hit result of an intersection check.
+         *
+         * This class stores the intersection point, the information if a hit occurred and what element got hit.
+         */
         class hitResult
         {
             public:
-                hitResult() : m_hasHit(false), m_hitPoint(), m_element(-1) {}
-                hitResult(const bool hasHit, const vektor & hitPoint) :
-                    m_hasHit(hasHit), m_hitPoint(hitPoint), m_element(-1) {
+                /*! \brief Default constructor
+                 *
+                 * This constructor initializes an empty hit result.
+                 */
+                hitResult() : hasHit(false), hitPoint(), element(-1) {}
+                /*! \brief Constructor
+                 *
+                 * This constructor initializes the hit result with hit information and hit point.
+                 */
+                hitResult(const bool HasHit, const vektor & HitPoint) :
+                    hasHit(HasHit), hitPoint(HitPoint), element(-1) {
                 }
+                /*! \brief Copy constructor */
                 hitResult(const hitResult & rhs) :
-                    m_hasHit(rhs.m_hasHit), m_hitPoint(rhs.m_hitPoint),
-                    m_element(rhs.m_element) {
+                    hasHit(rhs.hasHit), hitPoint(rhs.hitPoint),
+                    element(rhs.element) {
                 }
+                /*! \brief Destructor */
                 virtual ~hitResult() {}
 
+                /*! \brief Assignment operator
+                 *
+                 * This operator copies the information of the given hit result to the current instance.
+                 */
                 hitResult & operator= (const hitResult & rhs) {
                     if(this != &rhs) {
-                        m_hasHit = rhs.m_hasHit;
-                        m_hitPoint = rhs.m_hitPoint;
-                        m_element = rhs.m_element;
+                        hasHit = rhs.hasHit;
+                        hitPoint = rhs.hitPoint;
+                        element = rhs.element;
                     }
                     return *this;
                 }
-                bool get_hasHit() const { return m_hasHit; }
-                void set_hasHit(const bool value) { m_hasHit = value; }
-                vektor get_hitPoint() const { return m_hitPoint; }
-                explicit operator bool() const { return m_hasHit; }
+                /*! \brief Bool operator
+                 *
+                 * This operator evaluates the instance as bool.
+                 * True if the hit occurred, false if not.
+                 */
+                explicit operator bool() const { return hasHit; }
+                /*! \brief Calculate the distance between the hit point and the given point.
+                 *
+                 * This function calculates the distance between the hit point and the given point.
+                 */
                 double get_distance(const vektor & rhs) const {
-                    return (m_hitPoint - rhs).get_length();
+                    return (hitPoint - rhs).get_length();
                 }
-
-                int32_t get_element() const { return m_element; }
-                void set_element(const int32_t element) { m_element = element; }
-
-            protected:
-                bool m_hasHit;
-                vektor m_hitPoint;
-                int32_t m_element;
+            public:
+                bool hasHit; /*!< \brief Information if the hit occurred. */
+                vektor hitPoint; /*!< \brief Position where the intersection occurs. */
+                int32_t element; /*!< \brief Number of the element that got hit. */ 
         };
     }
 }
