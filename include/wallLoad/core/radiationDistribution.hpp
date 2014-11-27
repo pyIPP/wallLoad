@@ -12,7 +12,7 @@
 
 namespace wallLoad {
     namespace core {
-        /*! Class representing a radiation distribution
+        /*! \brief Class representing a radiation distribution
          *
          * This class calculates random positions on an equilibrium with a probability which is proportional to the given radiation distribution.
          * A boundary contour can be provided to limit the area in which the points are generated.

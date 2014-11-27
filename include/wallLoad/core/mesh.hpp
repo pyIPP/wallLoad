@@ -15,9 +15,14 @@
 
 namespace wallLoad {
     namespace core {
+        /*! \brief Class representing the mesh of the first wall.
+         *
+         * This class stores the vertices of the first wall contour.
+         */
         class mesh : public std::vector<vertex>
         {
             public:
+                /*! \brief Copy constructor */
                 mesh(const mesh & rhs) : 
                     std::vector<vertex>(rhs),
                     m_emissivity(rhs.size(), 1.0),
@@ -25,6 +30,12 @@ namespace wallLoad {
                     m_uniform() {
                 }
 
+                /*! \brief Python constructor
+                 *
+                 * This constructor loads the vertices from a python list.
+                 * This constructor is intended as python interface.
+                 * Do not use this constructor from within C++.
+                 */
                 mesh(const boost::python::list & rhs) : 
                     std::vector<vertex>(),
                     m_emissivity(boost::python::len(rhs), 1.0),
@@ -35,6 +46,10 @@ namespace wallLoad {
                     }
                 }
 
+                /*! Constructor
+                 *
+                 * This constructor loads the vertices from a *.msh file created by gmsh.
+                 */
                 mesh(const std::string & filename) : 
                     std::vector<vertex>(),
                     m_emissivity(),
@@ -83,8 +98,13 @@ namespace wallLoad {
                     }
                 }
 
+                /*! \brief Destructor */
                 virtual ~mesh() {}
 
+                /*! \brief Assignment operator
+                 *
+                 * This operators copies the vertices from the given mesh to the current instance.
+                 */
                 mesh & operator=(const mesh & rhs) {
                     if(this != &rhs) {
                         std::vector<vertex>::operator=(rhs);
@@ -93,10 +113,20 @@ namespace wallLoad {
                     return *this;
                 }
 
+                /*! \brief Append vertex
+                 *
+                 * This function appends the given vertex to the mesh.
+                 */
                 inline void append(const vertex & rhs) {
                     std::vector<vertex>::push_back(rhs);
                 }
 
+                /*! \brief Calculate the intersections of the given ray with the mesh.
+                 *
+                 * This function calculates the intersections of the given ray with the mesh.
+                 * All points that hit a vertex are returned.
+                 * The sorting which point is the real hit point needs to be done separately.
+                 */
                 std::vector<hitResult> intersect(const vektor & origin, const vektor & direction) const {
                     hitResult temp;
                     std::vector<hitResult> output;
@@ -110,6 +140,12 @@ namespace wallLoad {
                     return output;
                 }
 
+                /*! \brief Calculate the hit point of the ray
+                 *
+                 * This function calculates the intersections of the given ray with the mesh.
+                 * Only the real hit point of the ray is returned.
+                 * This means only points that lie in the direction of the ray and from those the one closest to the origin.
+                 */
                 hitResult evaluateHit(const vektor & origin, const vektor & direction) const {
                     std::vector<hitResult> temp = intersect(origin, direction);
                     if(temp.size()==0) {
@@ -128,6 +164,12 @@ namespace wallLoad {
                     return output;
                 }
 
+                /*! \brief Calculate the hit points of the rays
+                 *
+                 * This function calculates the intersections of each ray with the mesh.
+                 * Only the real hit point of the each ray is returned.
+                 * This means only points that lie in the direction of the ray and from those the one closest to the origin.
+                 */
                 std::vector<hitResult> evaluateHits(const std::vector<vektor> & origins, 
                     const std::vector<vektor> & directions) const {
                     std::vector<hitResult> output;
@@ -139,6 +181,14 @@ namespace wallLoad {
                     return output;
                 }
 
+                /*! \brief Calculate the hit points of the rays and return them as python list.
+                 *
+                 * This function calculates the intersections of each ray with the mesh.
+                 * Only the real hit point of the each ray is returned.
+                 * This means only points that lie in the direction of the ray and from those the one closest to the origin.
+                 * This function is intended as python interface.
+                 * Do not use it from within C++.
+                 */
                 boost::python::list evaluateHits_python(const boost::python::list & origins, 
                     const boost::python::list & directions) {
                     std::vector<vektor> tempOrigins;
@@ -160,10 +210,16 @@ namespace wallLoad {
                     }
                     return output;
                 }
+
+                /*! \brief Get ith vertex of the mesh. */
                 vertex & operator[] (const uint32_t i) { 
                     return std::vector<vertex>::operator[](i);
                 }
 
+                /*! \brief Calculate the areas of the vertices.
+                 *
+                 * This function calculates the area of each vertex in the mesh and returns the result as an array.
+                 */
                 std::vector<double> get_areas() const {
                     std::vector<double> output;
                     for(std::vector<vertex>::const_iterator iter = begin(); iter != end(); ++iter) {
@@ -172,9 +228,9 @@ namespace wallLoad {
                     return output;
                 }
             protected:
-                std::vector<double> m_emissivity;       
-                boost::random::mt19937 m_generator;
-                boost::random::uniform_01<double> m_uniform;
+                std::vector<double> m_emissivity; /*!< \brief Emissivity of the wall elements. */
+                boost::random::mt19937 m_generator; /*!< \brief Random number generator */
+                boost::random::uniform_01<double> m_uniform; /*!< \brief Uniform random distribution \f$[0,1[\f$. */
 
         };
     }
